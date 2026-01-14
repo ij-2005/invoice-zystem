@@ -2,15 +2,84 @@ import "./App.css";
 import { useState } from "react";
 
 function App() {
+
+  const dateNow = new Date();
+  const [invoiceNumber, setInvoiceNumber] = useState(`INV-${Math.floor(1000 + Math.random() * 9000)}`);
+  const [invoiceDate, setInvoiceDate] = useState(() => {
+  return dateNow.toISOString().split("T")[0]; // YYYY-MM-DD format
+  });
+
+  const [billTo, setBillTo] = useState("");
+  const [taxRate, setTaxRate] = useState();
+  const [discount, setDiscount] = useState();
+  const[items, setItems] = useState([]);
+  const[ItemForm, setItemForm] = useState({
+
+    name: "",
+    quantity: "",
+    price: "",
+
+  });
+
+  function AddItems(){
+
+    const { name, quantity, price } = ItemForm;
+
+    if(ItemForm.name == "" || ItemForm.quantity <= 0 || ItemForm.price <= 0)return alert("Please put proper values.");
+
+    const checkDupe = items.some(item => item.name.toLowerCase() === name.toLowerCase());
+    if(checkDupe){
+
+        setItemForm({
+
+        name: "",
+        quantity: "",
+        price: "",
+
+      });
+
+      return alert("Item already exists!");
+
+    }
+
+    setItems([
+      ...items,
+      {
+        name: ItemForm.name,
+        quantity: Number(ItemForm.quantity),
+        price: Number(ItemForm.price),
+      }
+    ]);
+
+    setItemForm({
+
+      name: "",
+      quantity: "",
+      price: "",
+
+    });
+
+  }
+
+  function removeItem(index){
+    setItems(
+      items.filter( (_, i) => i !== index)
+    );
+  }
   
-  const items = [
-  { name: "Notebook", quantity: 2, price: 150 },
-  { name: "Pen", quantity: 5, price: 20 },
-  { name: "Stapler", quantity: 1, price: 250 },
-]; //test array.
+
+  const tax = taxRate / 100;
+  const subtotal = items.reduce((total, item) => total + item.quantity * item.price, 0.00);
+  const totalWithDiscount = subtotal - discount;
+  const taxAmt = totalWithDiscount * tax;
+  const compTotal = totalWithDiscount + taxAmt;
   
-  const [taxRate, setTaxRate] = useState(0);
-  const [discount, setDiscount] = useState(0);
+  const Final = compTotal.toFixed(2);
+
+  function handlePrint() {
+  window.print();
+  }
+
 
   return (
     <>
@@ -30,24 +99,53 @@ function App() {
               </div>
             </div>
 
+            <div className="detail-group bill-to">
+              <label>Bill To:</label>
+              <input 
+                type="text" 
+                placeholder="Enter customer name" 
+                className="detail-input" 
+                value={billTo} 
+                onChange={(e) => setBillTo(e.target.value)} 
+              />
+            </div>
+
+
             <div className="details-row">
               <div className="detail-group">
-                <label>Invoice #:</label>
-                <span className="detail-text">INV-XXXX</span>
+                <div className="details-row">
+                    <div className="detail-group">
+                      <label>Invoice #:</label>
+                      <input
+                        type="text"
+                        className="detail-input"
+                        placeholder={invoiceNumber}
+                        onChange={(e) => setInvoiceNumber(e.target.value)}
+                      />
+                    </div>
+                  </div>
+
               </div>
 
               <div className="detail-group">
                 <label>Date:</label>
-                <span className="detail-text">YYYY-MM-DD</span>
+                  <input
+                    type="date"
+                    className="detail-input"
+                    value={invoiceDate}
+                    onChange={(e) => setInvoiceDate(e.target.value)}
+                  />
               </div>
+
+
             </div>
           </div>
 
             <div className="items-input-row">
-              <input type="text" placeholder="Item name" className="item-input" />
-              <input type="number" placeholder="Qty" className="item-input qty-input" />
-              <input type="number" placeholder="Price" className="item-input" />
-              <button className="add-button">Add</button>
+              <input type="text" placeholder="Item name" className="item-input" value={ItemForm.name} onChange={e => {setItemForm({ ...ItemForm, name: e.target.value});}}/>
+              <input type="number" placeholder="Qty" className="item-input qty-input" value={ItemForm.quantity} onChange={e => {setItemForm({ ...ItemForm, quantity: e.target.value});}}/>
+              <input type="number" placeholder="Price" className="item-input" value={ItemForm.price} onChange={e => {setItemForm({ ...ItemForm, price: e.target.value});}}/>
+              <button className="add-button"onClick={(AddItems)}>Add</button>
             </div>
 
             <div className="invoice-items">
@@ -77,7 +175,7 @@ function App() {
           <div className="invoice-totals">
             <div className="total-row">
               <label>Subtotal:</label>
-              <span></span>
+              <span>{subtotal}</span>
             </div>
 
             <div className="total-row">
@@ -85,7 +183,7 @@ function App() {
               <input 
                 type="number" 
                 value={taxRate} 
-                onChange={(e) => setTaxRate(e.target.value)}
+                onChange={(e) => setTaxRate(Number(e.target.value))}
                 placeholder="0"
                 className="total-bg"
               />
@@ -96,7 +194,7 @@ function App() {
               <input 
                 type="number" 
                 value={discount} 
-                onChange={(e) => setDiscount(e.target.value)}
+                onChange={(e) => setDiscount(Number(e.target.value))}
                 placeholder="0"
                 className="total-bg"
               />
@@ -104,8 +202,8 @@ function App() {
 
             <div className="final-total-row">
               <label>Final Total:</label>
-              <span></span>
-              <button className="print-button">Print Invoice</button>
+              <span>{taxRate && discount || taxRate < 0 && discount < 0 || Final < 0 ? `${Final}` : "Incomplete output."}</span>
+              <button className="print-button" onClick={handlePrint}>Print Invoice</button>
             </div>
           </div>
 

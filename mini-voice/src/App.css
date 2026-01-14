@@ -42,8 +42,8 @@
   color: #000;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
+.detail-text { 
+  color: black;
 }
 
 .detail-input {
@@ -55,10 +55,33 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: black;
 }
 
+.detail-group.bill-to {
+  margin-bottom: 1.5rem; /* adjust as needed */
+}
+
 .detail-input:disabled {
   background-color: #e8e8e8;
   cursor: not-allowed;
 }
+
+/* Make date input same size as regular text inputs */
+.detail-input[type="date"] {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #000;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  color: black;
+  height: 37px; /* adjust as needed to match other inputs */
+  box-sizing: border-box;
+}
+
+/* Optional: style the calendar icon */
+.detail-input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(1);
+}
+
 
 .invoice-container {
   background-color: #fff;
@@ -295,4 +318,38 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .items-input-row input[type="number"]:not(.qty-input) {
   -moz-appearance: textfield;
+}
+
+
+/* print */
+
+@media print {
+  body * {
+    visibility: hidden; /* hide everything by default */
+  }
+
+  .invoice-container, .invoice-container * {
+    visibility: visible; /* show only the invoice */
+  }
+
+  .invoice-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  .item-input, .items-input-row {
+    visibility: hidden;
+  }
+
+  .add-button,
+  .item-column button,
+  .print-button {
+    display: none; /* hide buttons in print */
+  }
+
+  input {
+    border: none;
+    background: transparent;
+  }
 }
