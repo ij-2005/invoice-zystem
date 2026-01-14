@@ -142,6 +142,7 @@
 
 /* Invoice Items Section */
 .invoice-items {
+  margin-top: 1rem;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
   border-bottom: 2px solid #000;
@@ -167,13 +168,17 @@
 
 .items-input-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr auto; /* last column adjusts to button width */
   gap: 1rem;
   padding: 1rem;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-bottom: 1rem;
+  margin-bottom: 2px;
+
+  width: max-content;   /* shrink row to fit inputs + button */
+  margin: 0 auto;       /* center horizontally in parent */
+  align-items: center;  /* vertical center of inputs/buttons */
 }
 
 .item-input {
@@ -324,32 +329,23 @@
 /* print */
 
 @media print {
-  body * {
-    visibility: hidden; /* hide everything by default */
+  .item-row {
+    background-color: transparent; /* remove colors */
+    border: 1px solid #000;       /* clear table borders */
   }
 
-  .invoice-container, .invoice-container * {
-    visibility: visible; /* show only the invoice */
+  .final-total-row {
+    background-color: transparent;
+    border: 2px solid #000;
+    color: #000;
   }
 
-  .invoice-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-
-  .item-input, .items-input-row {
-    visibility: hidden;
-  }
-
-  .add-button,
-  .item-column button,
-  .print-button {
-    display: none; /* hide buttons in print */
-  }
-
-  input {
+  .detail-input {
     border: none;
-    background: transparent;
+    font-weight: bold;
+  }
+
+  body {
+    font-size: 14pt;
   }
 }
