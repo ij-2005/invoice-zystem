@@ -120,6 +120,7 @@ function App() {
     <>
       <div className="Title">
         <h1>Mini-voice</h1>
+        <p className="credit">Created by ij2005</p>
       </div>
 
       <div className="invoice-container">
