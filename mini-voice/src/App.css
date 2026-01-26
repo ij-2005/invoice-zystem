@@ -334,10 +334,51 @@
   -moz-appearance: textfield;
 }
 
+.invoice-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  gap: 1rem;
+}
+
+.invoice-actions .reset-button {
+  padding: 0.75rem 2rem;
+  background-color: #f5f5f5;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.invoice-actions .reset-button:hover {
+  background-color: #ddd;
+}
+
 
 /* print */
 
 @media print {
+
+
+  * {
+    color: #000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .items-header {
+    background-color: #000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .item-column-title {
+    color: #fff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 
   /* Hide the Action column title */
   .items-header .item-column-title:last-child {
@@ -347,6 +388,10 @@
   /* Hide the Remove buttons in each row */
   .item-row .item-column:last-child {
     display: none;
+  }
+
+  .invoice-items {
+  margin: 0;
   }
   
   /* Adjust grid to have only 4 columns in print view */
@@ -408,5 +453,9 @@
 
   body {
     font-size: 14pt;
+  }
+
+  .invoice-actions {
+    display: none;
   }
 }

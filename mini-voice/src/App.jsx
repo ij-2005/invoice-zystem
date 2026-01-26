@@ -115,6 +115,25 @@ function App() {
   window.print();
 }
 
+  function handleReset() {
+  if (window.confirm("Are you sure you want to reset the entire invoice? This will clear all data.")) {
+    setCompanyName("");
+    setInvoiceNumber(`INV-${Math.floor(1000 + Math.random() * 9000)}`);
+    setInvoiceDate(() => {
+      return new Date().toISOString().split("T")[0];
+    });
+    setBillTo("");
+    setTaxRate();
+    setDiscount();
+    setItems([]);
+    setItemForm({
+      name: "",
+      quantity: "",
+      price: "",
+    });
+  }
+}
+
 
   return (
     <>
@@ -256,6 +275,11 @@ function App() {
               <button className="print-button" onClick={handlePrint}>Print Invoice</button>
             </div>
           </div>
+
+          <div className="invoice-actions">
+            <button className="reset-button" onClick={handleReset}>Reset Invoice</button>
+          </div>
+          
 
           <div className="invoice-printOption">
           </div>
