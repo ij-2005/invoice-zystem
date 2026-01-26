@@ -330,6 +330,25 @@
 
 @media print {
 
+  /* Hide the Action column title */
+  .items-header .item-column-title:last-child {
+    display: none;
+  }
+  
+  /* Hide the Remove buttons in each row */
+  .item-row .item-column:last-child {
+    display: none;
+  }
+  
+  /* Adjust grid to have only 4 columns in print view */
+  .items-header {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+  
+  .item-row {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+
   .items-input-row {
     visibility: hidden;
     height: 0;

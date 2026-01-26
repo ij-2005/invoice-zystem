@@ -3,6 +3,7 @@ import { useState } from "react";
 
 function App() {
 
+  const [companyName, setCompanyName] = useState("");
   const dateNow = new Date();
   const [invoiceNumber, setInvoiceNumber] = useState(`INV-${Math.floor(1000 + Math.random() * 9000)}`);
   const [invoiceDate, setInvoiceDate] = useState(() => {
@@ -25,22 +26,13 @@ function App() {
 
     const { name, quantity, price } = ItemForm;
 
-    if(ItemForm.name == "" || ItemForm.quantity <= 0 || ItemForm.price <= 0)return alert("Please put proper values.");
+    if(ItemForm.name === "" || ItemForm.quantity <= 0 || ItemForm.price <= 0)return alert("Please put proper values.");
 
     const checkDupe = items.some(item => item.name.toLowerCase() === name.toLowerCase());
-    if(checkDupe){
-
-        setItemForm({
-
-        name: "",
-        quantity: "",
-        price: "",
-
-      });
-
-      return alert("Item already exists!");
-
-    }
+      if(checkDupe){
+        
+        return alert("Item already exists!");
+      }
 
     setItems([
       ...items,
@@ -68,17 +60,60 @@ function App() {
   }
   
 
-  const tax = taxRate / 100;
+  const tax = (taxRate || 0) / 100;
   const subtotal = items.reduce((total, item) => total + item.quantity * item.price, 0.00);
-  const totalWithDiscount = subtotal - discount;
+  const totalWithDiscount = subtotal - (discount || 0);
   const taxAmt = totalWithDiscount * tax;
   const compTotal = totalWithDiscount + taxAmt;
   
   const Final = compTotal.toFixed(2);
 
-  function handlePrint() {
-  window.print();
+  function validateInvoice() {
+  // Check required fields
+
+  if (!companyName.trim()) {
+    alert("Please fill in 'Company Name' field.");
+    return false;
   }
+
+  if (!billTo.trim()) {
+    alert("Please fill in 'Bill To' field.");
+    return false;
+  }
+  
+  if (items.length === 0) {
+    alert("Please add at least one item.");
+    return false;
+  }
+  
+  // Validate tax rate (if entered, should be >= 0)
+  if (taxRate && taxRate < 0) {
+    alert("Tax rate cannot be negative.");
+    return false;
+  }
+  
+  // Validate discount (if entered, should be >= 0)
+  if (discount && discount < 0) {
+    alert("Discount cannot be negative.");
+    return false;
+  }
+  
+  // Validate discount doesn't exceed subtotal
+  if (discount > subtotal) {
+    alert("Discount cannot exceed subtotal.");
+    return false;
+  }
+  
+  return true;
+}
+
+  function handlePrint() {
+  // Validate before printing
+  if (!validateInvoice()) {
+    return; // Stop if validation fails
+  }
+  window.print();
+}
 
 
   return (
@@ -95,7 +130,13 @@ function App() {
             <div className="details-row">
               <div className="detail-group">
                 <label>Company Name:</label>
-                <input type="text" placeholder="Enter company name" className="detail-input" />
+                <input 
+                    type="text" 
+                    placeholder="Enter company name" 
+                    className="detail-input" 
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                  />
               </div>
             </div>
 
@@ -183,7 +224,10 @@ function App() {
               <input 
                 type="number" 
                 value={taxRate} 
-                onChange={(e) => setTaxRate(Number(e.target.value))}
+                onChange={(e) => {
+                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                    setTaxRate(value);
+                  }}
                 placeholder="0"
                 className="total-bg"
               />
@@ -194,7 +238,10 @@ function App() {
               <input 
                 type="number" 
                 value={discount} 
-                onChange={(e) => setDiscount(Number(e.target.value))}
+                onChange={(e) => {
+                    const value = e.target.value === "" ? undefined : Number(e.target.value);
+                    setDiscount(value);
+                  }}
                 placeholder="0"
                 className="total-bg"
               />
@@ -202,7 +249,9 @@ function App() {
 
             <div className="final-total-row">
               <label>Final Total:</label>
-              <span>{taxRate && discount || taxRate < 0 && discount < 0 || Final < 0 ? `${Final}` : "Incomplete output."}</span>
+              <span>
+                {items.length > 0 ? `$${Final}` : "Incomplete Input."}
+              </span>
               <button className="print-button" onClick={handlePrint}>Print Invoice</button>
             </div>
           </div>
