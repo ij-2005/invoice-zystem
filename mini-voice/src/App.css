@@ -329,6 +329,22 @@
 /* print */
 
 @media print {
+
+  .items-input-row {
+    visibility: hidden;
+    height: 0;
+    opacity: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  
+  /* Or use a wrapper approach */
+  .items-input-container {
+    height: 0;
+    overflow: hidden;
+  }
+  
   .item-row {
     background-color: transparent; /* remove colors */
     border: 1px solid #000;       /* clear table borders */
@@ -346,6 +362,19 @@
   }
 
   .print-button {
+    display: none;
+  }
+
+  .detail-input,
+  .detail-input[type="date"] {
+    border: none;
+    font-weight: bold;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+  
+  .detail-input[type="date"]::-webkit-calendar-picker-indicator {
     display: none;
   }
 

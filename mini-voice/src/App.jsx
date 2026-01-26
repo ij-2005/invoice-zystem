@@ -131,7 +131,7 @@ function App() {
                 <label>Date:</label>
                   <input
                     type="date"
-                    className="detail-input"
+                    className="detail-input calendar"
                     value={invoiceDate}
                     onChange={(e) => setInvoiceDate(e.target.value)}
                   />
