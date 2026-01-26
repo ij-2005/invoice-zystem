@@ -345,6 +345,10 @@
     font-weight: bold;
   }
 
+  .print-button {
+    display: none;
+  }
+
   body {
     font-size: 14pt;
   }
