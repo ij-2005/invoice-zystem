@@ -125,8 +125,8 @@ function App() {
       return new Date().toISOString().split("T")[0];
     });
     setBillTo("");
-    setTaxRate();
-    setDiscount();
+    setTaxRate(0);
+    setDiscount(0);
     setItems([]);
     setItemForm({
       name: "",
