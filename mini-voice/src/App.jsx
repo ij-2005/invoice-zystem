@@ -3,6 +3,7 @@ import { useState } from "react";
 
 function App() {
 
+
   const [companyName, setCompanyName] = useState("");
   const dateNow = new Date();
   const [invoiceNumber, setInvoiceNumber] = useState(`INV-${Math.floor(1000 + Math.random() * 9000)}`);
@@ -10,6 +11,7 @@ function App() {
   return dateNow.toISOString().split("T")[0]; // YYYY-MM-DD format
   });
 
+  const [currency, setCurrency] = useState("$"); // default to USD
   const [billTo, setBillTo] = useState("");
   const [taxRate, setTaxRate] = useState();
   const [discount, setDiscount] = useState();
@@ -171,6 +173,38 @@ function App() {
               />
             </div>
 
+            <div className="detail-group">
+              <label>Currency:</label>
+              <select 
+                value={currency} 
+                onChange={(e) => setCurrency(e.target.value)} 
+                className="detail-input currency"
+              >
+                <option value="$">USD ($)</option>
+                <option value="€">EUR (€)</option>
+                <option value="£">GBP (£)</option>
+                <option value="¥">JPY (¥)</option>
+                <option value="₹">INR (₹)</option>
+                <option value="₩">KRW (₩)</option>
+                <option value="₽">RUB (₽)</option>
+                <option value="₺">TRY (₺)</option>
+                <option value="A$">AUD (A$)</option>
+                <option value="C$">CAD (C$)</option>
+                <option value="CHF">CHF (CHF)</option>
+                <option value="HK$">HKD (HK$)</option>
+                <option value="NZ$">NZD (NZ$)</option>
+                <option value="SGD">SGD (SGD)</option>
+                <option value="SEK">SEK (SEK)</option>
+                <option value="NOK">NOK (NOK)</option>
+                <option value="DKK">DKK (DKK)</option>
+                <option value="ZAR">ZAR (ZAR)</option>
+                <option value="BRL">BRL (R$)</option>
+                <option value="MXN">MXN ($)</option>
+                <option value="MYR">MYR (RM)</option>
+                <option value="PHP">PHP (₱)</option>
+              </select>
+            </div>
+
 
             <div className="details-row">
               <div className="detail-group">
@@ -223,8 +257,8 @@ function App() {
                 <div key={index} className="item-row">
                     <div className="item-column">{item.name}</div>
                     <div className="item-column">{item.quantity}</div>
-                    <div className="item-column">{item.price}</div>
-                    <div className="item-column">{item.quantity * item.price}</div>
+                    <div className="item-column">{currency}{item.price}</div>
+                    <div className="item-column">{currency}{(item.quantity * item.price).toFixed(2)}</div>
                     <div className="item-column">
                       <button onClick={() => removeItem(index)}>Remove</button>
                     </div>
@@ -236,7 +270,7 @@ function App() {
           <div className="invoice-totals">
             <div className="total-row">
               <label>Subtotal:</label>
-              <span>{subtotal}</span>
+              <span>{currency}{subtotal}</span>
             </div>
 
             <div className="total-row">
@@ -270,7 +304,7 @@ function App() {
             <div className="final-total-row">
               <label>Final Total:</label>
               <span>
-                {items.length > 0 ? `$${Final}` : "Incomplete Input."}
+                {items.length > 0 ? `${currency}${Final}` : "Incomplete Input."}
               </span>
               <button className="print-button" onClick={handlePrint}>Print Invoice</button>
             </div>

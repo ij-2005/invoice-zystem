@@ -68,6 +68,21 @@
   margin-bottom: 1.5rem; /* adjust as needed */
 }
 
+.detail-group select.detail-input { 
+  padding-right: 2rem;        /* Gives extra space for dropdown arrow */
+  appearance: none;            /* Remove default styling in some browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-position: right 0.75rem center; /* position the arrow nicely */
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+.detail-input.currency {
+  margin-bottom: 1.5rem;
+}
+
+
 .detail-input:disabled {
   background-color: #e8e8e8;
   cursor: not-allowed;
